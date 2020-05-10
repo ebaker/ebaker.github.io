@@ -27,12 +27,13 @@ function Carousel(_ref) {
   var work = _ref.work,
       activeImageIndex = _ref.activeImageIndex,
       setActiveImageIndex = _ref.setActiveImageIndex,
-      setGalleryOpen = _ref.setGalleryOpen;
+      setGalleryOpen = _ref.setGalleryOpen,
+      segment = _ref.segment;
   return __jsx("div", {
     __self: this,
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 11,
+      lineNumber: 12,
       columnNumber: 5
     }
   }, __jsx(react_responsive_carousel__WEBPACK_IMPORTED_MODULE_2__["Carousel"], {
@@ -45,11 +46,14 @@ function Carousel(_ref) {
     renderArrowPrev: function renderArrowPrev(onClickHandler, hasPrev) {
       return hasPrev && __jsx("div", {
         className: "button left",
-        onClick: onClickHandler,
+        onClick: function onClick() {
+          segment().track('Carousel Prev Arrow Clicked');
+          onClickHandler();
+        },
         __self: _this,
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 21,
+          lineNumber: 22,
           columnNumber: 13
         }
       }, __jsx("i", {
@@ -57,7 +61,7 @@ function Carousel(_ref) {
         __self: _this,
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 22,
+          lineNumber: 27,
           columnNumber: 15
         }
       }));
@@ -65,11 +69,14 @@ function Carousel(_ref) {
     renderArrowNext: function renderArrowNext(onClickHandler, hasNext) {
       return hasNext && __jsx("div", {
         className: "button right",
-        onClick: onClickHandler,
+        onClick: function onClick() {
+          segment().track('Carousel Next Arrow Clicked');
+          onClickHandler();
+        },
         __self: _this,
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 28,
+          lineNumber: 33,
           columnNumber: 13
         }
       }, __jsx("i", {
@@ -77,7 +84,7 @@ function Carousel(_ref) {
         __self: _this,
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 29,
+          lineNumber: 37,
           columnNumber: 15
         }
       }));
@@ -85,7 +92,7 @@ function Carousel(_ref) {
     __self: this,
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 12,
+      lineNumber: 13,
       columnNumber: 7
     }
   }, work.map(function (project, index) {
@@ -94,12 +101,15 @@ function Carousel(_ref) {
       __self: _this,
       __source: {
         fileName: _jsxFileName,
-        lineNumber: 35,
+        lineNumber: 43,
         columnNumber: 11
       }
     }, __jsx("img", {
       src: project.image,
       onClick: function onClick() {
+        segment().track("Carousel Image Clicked - ".concat(project.title, " - ").concat(project.subtitle), {
+          image: project.image
+        });
         setActiveImageIndex(index); // @ebaker - quick hack to remove double bars on small device height
 
         document.body.style.overflowY = 'hidden';
@@ -111,7 +121,7 @@ function Carousel(_ref) {
       __self: _this,
       __source: {
         fileName: _jsxFileName,
-        lineNumber: 36,
+        lineNumber: 44,
         columnNumber: 13
       }
     }), __jsx("div", {
@@ -122,21 +132,21 @@ function Carousel(_ref) {
       __self: _this,
       __source: {
         fileName: _jsxFileName,
-        lineNumber: 47,
+        lineNumber: 56,
         columnNumber: 13
       }
     }, __jsx("h3", {
       __self: _this,
       __source: {
         fileName: _jsxFileName,
-        lineNumber: 48,
+        lineNumber: 57,
         columnNumber: 15
       }
     }, project.title), __jsx("div", {
       __self: _this,
       __source: {
         fileName: _jsxFileName,
-        lineNumber: 49,
+        lineNumber: 58,
         columnNumber: 15
       }
     }, project.subtitle)));
@@ -145,7 +155,7 @@ function Carousel(_ref) {
     __self: this,
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 54,
+      lineNumber: 63,
       columnNumber: 7
     }
   }, __jsx("i", {
@@ -153,7 +163,7 @@ function Carousel(_ref) {
     __self: this,
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 55,
+      lineNumber: 64,
       columnNumber: 9
     }
   })));
@@ -189,7 +199,8 @@ function Carousel(_ref) {
       activeImageIndex = _ref.activeImageIndex,
       setActiveImageIndex = _ref.setActiveImageIndex,
       galleryOpen = _ref.galleryOpen,
-      setGalleryOpen = _ref.setGalleryOpen;
+      setGalleryOpen = _ref.setGalleryOpen,
+      segment = _ref.segment;
   return __jsx(react_bnb_gallery__WEBPACK_IMPORTED_MODULE_1__["ReactBnbGallery"], {
     show: galleryOpen,
     preloadSize: 1,
@@ -201,22 +212,38 @@ function Carousel(_ref) {
     onClose: function onClose() {
       // @ebaker - quick hack to remove double bars on small device height
       document.body.style.removeProperty('overflow-y');
+      segment().track('Click Gallery Close', {
+        gallery: work[activeImageIndex].gallery
+      });
       setGalleryOpen(false);
     },
     nextButtonPressed: function nextButtonPressed() {
+      segment().track('Click Gallery Next', {
+        gallery: work[activeImageIndex].gallery
+      });
       var nextIndex = activeImageIndex + 1 >= work.length ? 0 : activeImageIndex + 1;
       setActiveImageIndex(nextIndex);
     },
     prevButtonPressed: function prevButtonPressed() {
+      segment().track('Click Gallery Prev', {
+        gallery: work[activeImageIndex].gallery
+      });
       var prevIndex = activeImageIndex - 1 < 0 ? work.length - 1 : activeImageIndex - 1;
       setActiveImageIndex(prevIndex);
     },
     activePhotoPressed: function activePhotoPressed(moveNext) {
-      var link = work[activeImageIndex].gallery.link;
+      var gallery = work[activeImageIndex].gallery;
+      var link = gallery.link;
 
       if (link) {
+        segment().track("Gallery Link Clicked - ".concat(gallery.caption), {
+          photo: gallery.photo
+        });
         window.open(link);
       } else {
+        segment().track("Gallery Image Clicked - ".concat(gallery.caption), {
+          photo: gallery.photo
+        });
         var nextIndex = activeImageIndex + 1 >= work.length ? 0 : activeImageIndex + 1;
         setActiveImageIndex(nextIndex);
         moveNext();
@@ -225,7 +252,7 @@ function Carousel(_ref) {
     __self: this,
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 13,
+      lineNumber: 14,
       columnNumber: 5
     }
   });
@@ -10942,7 +10969,7 @@ var _getPrototypeOf = __webpack_require__(/*! @babel/runtime/helpers/getPrototyp
 
 var _toConsumableArray = __webpack_require__(/*! @babel/runtime/helpers/toConsumableArray */ "./node_modules/@babel/runtime/helpers/toConsumableArray.js");
 
-function _createSuper(Derived) { return function () { var Super = _getPrototypeOf(Derived), result; if (_isNativeReflectConstruct()) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
+function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function () { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
 
 function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
 
@@ -11439,6 +11466,201 @@ module.exports = function shimEntries() {
 	});
 	return polyfill;
 };
+
+
+/***/ }),
+
+/***/ "./node_modules/process/browser.js":
+/*!*****************************************!*\
+  !*** ./node_modules/process/browser.js ***!
+  \*****************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+// shim for using process in browser
+var process = module.exports = {};
+
+// cached from whatever global is present so that test runners that stub it
+// don't break things.  But we need to wrap it in a try catch in case it is
+// wrapped in strict mode code which doesn't define any globals.  It's inside a
+// function because try/catches deoptimize in certain engines.
+
+var cachedSetTimeout;
+var cachedClearTimeout;
+
+function defaultSetTimout() {
+    throw new Error('setTimeout has not been defined');
+}
+function defaultClearTimeout () {
+    throw new Error('clearTimeout has not been defined');
+}
+(function () {
+    try {
+        if (typeof setTimeout === 'function') {
+            cachedSetTimeout = setTimeout;
+        } else {
+            cachedSetTimeout = defaultSetTimout;
+        }
+    } catch (e) {
+        cachedSetTimeout = defaultSetTimout;
+    }
+    try {
+        if (typeof clearTimeout === 'function') {
+            cachedClearTimeout = clearTimeout;
+        } else {
+            cachedClearTimeout = defaultClearTimeout;
+        }
+    } catch (e) {
+        cachedClearTimeout = defaultClearTimeout;
+    }
+} ())
+function runTimeout(fun) {
+    if (cachedSetTimeout === setTimeout) {
+        //normal enviroments in sane situations
+        return setTimeout(fun, 0);
+    }
+    // if setTimeout wasn't available but was latter defined
+    if ((cachedSetTimeout === defaultSetTimout || !cachedSetTimeout) && setTimeout) {
+        cachedSetTimeout = setTimeout;
+        return setTimeout(fun, 0);
+    }
+    try {
+        // when when somebody has screwed with setTimeout but no I.E. maddness
+        return cachedSetTimeout(fun, 0);
+    } catch(e){
+        try {
+            // When we are in I.E. but the script has been evaled so I.E. doesn't trust the global object when called normally
+            return cachedSetTimeout.call(null, fun, 0);
+        } catch(e){
+            // same as above but when it's a version of I.E. that must have the global object for 'this', hopfully our context correct otherwise it will throw a global error
+            return cachedSetTimeout.call(this, fun, 0);
+        }
+    }
+
+
+}
+function runClearTimeout(marker) {
+    if (cachedClearTimeout === clearTimeout) {
+        //normal enviroments in sane situations
+        return clearTimeout(marker);
+    }
+    // if clearTimeout wasn't available but was latter defined
+    if ((cachedClearTimeout === defaultClearTimeout || !cachedClearTimeout) && clearTimeout) {
+        cachedClearTimeout = clearTimeout;
+        return clearTimeout(marker);
+    }
+    try {
+        // when when somebody has screwed with setTimeout but no I.E. maddness
+        return cachedClearTimeout(marker);
+    } catch (e){
+        try {
+            // When we are in I.E. but the script has been evaled so I.E. doesn't  trust the global object when called normally
+            return cachedClearTimeout.call(null, marker);
+        } catch (e){
+            // same as above but when it's a version of I.E. that must have the global object for 'this', hopfully our context correct otherwise it will throw a global error.
+            // Some versions of I.E. have different rules for clearTimeout vs setTimeout
+            return cachedClearTimeout.call(this, marker);
+        }
+    }
+
+
+
+}
+var queue = [];
+var draining = false;
+var currentQueue;
+var queueIndex = -1;
+
+function cleanUpNextTick() {
+    if (!draining || !currentQueue) {
+        return;
+    }
+    draining = false;
+    if (currentQueue.length) {
+        queue = currentQueue.concat(queue);
+    } else {
+        queueIndex = -1;
+    }
+    if (queue.length) {
+        drainQueue();
+    }
+}
+
+function drainQueue() {
+    if (draining) {
+        return;
+    }
+    var timeout = runTimeout(cleanUpNextTick);
+    draining = true;
+
+    var len = queue.length;
+    while(len) {
+        currentQueue = queue;
+        queue = [];
+        while (++queueIndex < len) {
+            if (currentQueue) {
+                currentQueue[queueIndex].run();
+            }
+        }
+        queueIndex = -1;
+        len = queue.length;
+    }
+    currentQueue = null;
+    draining = false;
+    runClearTimeout(timeout);
+}
+
+process.nextTick = function (fun) {
+    var args = new Array(arguments.length - 1);
+    if (arguments.length > 1) {
+        for (var i = 1; i < arguments.length; i++) {
+            args[i - 1] = arguments[i];
+        }
+    }
+    queue.push(new Item(fun, args));
+    if (queue.length === 1 && !draining) {
+        runTimeout(drainQueue);
+    }
+};
+
+// v8 likes predictible objects
+function Item(fun, array) {
+    this.fun = fun;
+    this.array = array;
+}
+Item.prototype.run = function () {
+    this.fun.apply(null, this.array);
+};
+process.title = 'browser';
+process.browser = true;
+process.env = {};
+process.argv = [];
+process.version = ''; // empty string to avoid regexp issues
+process.versions = {};
+
+function noop() {}
+
+process.on = noop;
+process.addListener = noop;
+process.once = noop;
+process.off = noop;
+process.removeListener = noop;
+process.removeAllListeners = noop;
+process.emit = noop;
+process.prependListener = noop;
+process.prependOnceListener = noop;
+
+process.listeners = function (name) { return [] }
+
+process.binding = function (name) {
+    throw new Error('process.binding is not supported');
+};
+
+process.cwd = function () { return '/' };
+process.chdir = function (dir) {
+    throw new Error('process.chdir is not supported');
+};
+process.umask = function() { return 0; };
 
 
 /***/ }),
@@ -16622,7 +16844,7 @@ function extend() {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Folio; });
+/* WEBPACK VAR INJECTION */(function(process) {/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Folio; });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var next_head__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! next/head */ "./node_modules/next/dist/next-server/lib/head.js");
@@ -16665,25 +16887,53 @@ function Folio() {
       activeImageIndex = _useState4[0],
       setActiveImageIndex = _useState4[1];
 
+  function segment() {
+    var noop = function noop() {
+      return undefined;
+    };
+
+    return window && window.analytics || {
+      track: noop,
+      identify: noop,
+      page: noop,
+      trackLink: noop
+    };
+  }
+
+  Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(function () {
+    segment().identify();
+  }, []);
+  Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(function () {
+    segment().page('active', {
+      path: "/".concat(active)
+    });
+  }, [active]);
+  Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(function () {
+    document.querySelectorAll('a').forEach(function (link) {
+      segment().trackLink(link, "Contact Link Clicked - ".concat(link.className), {
+        href: link.href
+      });
+    });
+  }, []);
   return __jsx("div", {
     __self: this,
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 20,
+      lineNumber: 46,
       columnNumber: 5
     }
   }, __jsx(next_head__WEBPACK_IMPORTED_MODULE_1___default.a, {
     __self: this,
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 21,
+      lineNumber: 47,
       columnNumber: 7
     }
   }, __jsx("title", {
     __self: this,
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 22,
+      lineNumber: 48,
       columnNumber: 9
     }
   }, _me_json__WEBPACK_IMPORTED_MODULE_6__.title), __jsx("link", {
@@ -16692,14 +16942,24 @@ function Folio() {
     __self: this,
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 23,
+      lineNumber: 49,
+      columnNumber: 9
+    }
+  }), __jsx("script", {
+    dangerouslySetInnerHTML: {
+      __html: "\n    !function(){var analytics=window.analytics=window.analytics||[];if(!analytics.initialize)if(analytics.invoked)window.console&&console.error&&console.error(\"Segment snippet included twice.\");else{analytics.invoked=!0;analytics.methods=[\"trackSubmit\",\"trackClick\",\"trackLink\",\"trackForm\",\"pageview\",\"identify\",\"reset\",\"group\",\"track\",\"ready\",\"alias\",\"debug\",\"page\",\"once\",\"off\",\"on\",\"addSourceMiddleware\",\"addIntegrationMiddleware\"];analytics.factory=function(e){return function(){var t=Array.prototype.slice.call(arguments);t.unshift(e);analytics.push(t);return analytics}};for(var e=0;e<analytics.methods.length;e++){var t=analytics.methods[e];analytics[t]=analytics.factory(t)}analytics.load=function(e,t){var n=document.createElement(\"script\");n.type=\"text/javascript\";n.async=!0;n.src=\"https://cdn.segment.com/analytics.js/v1/\"+e+\"/analytics.min.js\";var a=document.getElementsByTagName(\"script\")[0];a.parentNode.insertBefore(n,a);analytics._loadOptions=t};analytics.SNIPPET_VERSION=\"4.1.0\";\n    analytics.load(\"".concat(process.env.SEGMENT_WRITE_KEY, "\");\n    analytics.page();\n    }}();\n    ")
+    },
+    __self: this,
+    __source: {
+      fileName: _jsxFileName,
+      lineNumber: 51,
       columnNumber: 9
     }
   })), __jsx("h1", {
     __self: this,
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 26,
+      lineNumber: 63,
       columnNumber: 7
     }
   }, _me_json__WEBPACK_IMPORTED_MODULE_6__.name), __jsx("div", {
@@ -16707,18 +16967,22 @@ function Folio() {
     __self: this,
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 27,
+      lineNumber: 64,
       columnNumber: 7
     }
   }, __jsx("div", {
     className: "button",
     onClick: function onClick() {
-      return setMobileMenuOpen(!mobileMenuOpen);
+      segment().track('Mobile Menu Clicked', {
+        active: active,
+        mobileMenuOpen: mobileMenuOpen
+      });
+      setMobileMenuOpen(!mobileMenuOpen);
     },
     __self: this,
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 28,
+      lineNumber: 65,
       columnNumber: 9
     }
   }, __jsx("i", {
@@ -16726,7 +16990,7 @@ function Folio() {
     __self: this,
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 32,
+      lineNumber: 72,
       columnNumber: 11
     }
   })), __jsx("div", {
@@ -16734,7 +16998,7 @@ function Folio() {
     __self: this,
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 34,
+      lineNumber: 74,
       columnNumber: 9
     }
   }, _me_json__WEBPACK_IMPORTED_MODULE_6__.name)), __jsx("div", {
@@ -16742,7 +17006,7 @@ function Folio() {
     __self: this,
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 36,
+      lineNumber: 76,
       columnNumber: 7
     }
   }, __jsx("div", {
@@ -16750,7 +17014,7 @@ function Folio() {
     __self: this,
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 37,
+      lineNumber: 77,
       columnNumber: 9
     }
   }), __jsx("div", {
@@ -16758,14 +17022,14 @@ function Folio() {
     __self: this,
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 38,
+      lineNumber: 78,
       columnNumber: 9
     }
   }, __jsx("ul", {
     __self: this,
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 39,
+      lineNumber: 79,
       columnNumber: 11
     }
   }, __jsx("span", {
@@ -16773,23 +17037,30 @@ function Folio() {
     __self: this,
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 40,
+      lineNumber: 80,
       columnNumber: 13
     }
   }), nav.map(function (view) {
     return __jsx("li", {
       key: view,
       onClick: function onClick() {
+        segment().track("Mobile Nav Link Clicked - ".concat(view), {
+          active: active,
+          mobileMenuOpen: mobileMenuOpen
+        });
         setActive(view);
         setMobileMenuOpen(false);
       },
       onMouseEnter: function onMouseEnter() {
-        return !mobileMenuOpen && setActive(view);
+        active !== view && segment().track("Nav MouseEnter - ".concat(view), {
+          active: active
+        });
+        !mobileMenuOpen && setActive(view);
       },
       __self: _this,
       __source: {
         fileName: _jsxFileName,
-        lineNumber: 42,
+        lineNumber: 82,
         columnNumber: 15
       }
     }, view);
@@ -16798,7 +17069,7 @@ function Folio() {
     __self: this,
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 55,
+      lineNumber: 103,
       columnNumber: 9
     }
   }, __jsx("div", {
@@ -16806,7 +17077,7 @@ function Folio() {
     __self: this,
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 56,
+      lineNumber: 104,
       columnNumber: 11
     }
   }, active), __jsx("div", {
@@ -16814,7 +17085,7 @@ function Folio() {
     __self: this,
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 57,
+      lineNumber: 105,
       columnNumber: 11
     }
   }), __jsx("div", {
@@ -16822,7 +17093,7 @@ function Folio() {
     __self: this,
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 58,
+      lineNumber: 106,
       columnNumber: 11
     }
   }, nav.map(function (view) {
@@ -16830,12 +17101,15 @@ function Folio() {
       key: view,
       className: "button ".concat(view),
       onClick: function onClick() {
-        return setActive(view);
+        segment().track("Spinner Button Clicked - ".concat(view), {
+          active: active
+        });
+        setActive(view);
       },
       __self: _this,
       __source: {
         fileName: _jsxFileName,
-        lineNumber: 60,
+        lineNumber: 108,
         columnNumber: 15
       }
     }, __jsx("div", {
@@ -16843,14 +17117,14 @@ function Folio() {
       __self: _this,
       __source: {
         fileName: _jsxFileName,
-        lineNumber: 65,
+        lineNumber: 118,
         columnNumber: 17
       }
     }, __jsx("div", {
       __self: _this,
       __source: {
         fileName: _jsxFileName,
-        lineNumber: 66,
+        lineNumber: 119,
         columnNumber: 19
       }
     }, view)));
@@ -16859,7 +17133,7 @@ function Folio() {
     __self: this,
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 71,
+      lineNumber: 124,
       columnNumber: 11
     }
   }, __jsx("div", {
@@ -16867,7 +17141,7 @@ function Folio() {
     __self: this,
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 72,
+      lineNumber: 125,
       columnNumber: 13
     }
   }, __jsx("div", {
@@ -16875,7 +17149,7 @@ function Folio() {
     __self: this,
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 73,
+      lineNumber: 126,
       columnNumber: 15
     }
   }, _me_json__WEBPACK_IMPORTED_MODULE_6__.contacts.map(function (contact) {
@@ -16884,7 +17158,7 @@ function Folio() {
       __self: _this,
       __source: {
         fileName: _jsxFileName,
-        lineNumber: 79,
+        lineNumber: 132,
         columnNumber: 19
       }
     }, __jsx("a", {
@@ -16894,7 +17168,7 @@ function Folio() {
       __self: _this,
       __source: {
         fileName: _jsxFileName,
-        lineNumber: 80,
+        lineNumber: 133,
         columnNumber: 21
       }
     }, __jsx("i", {
@@ -16902,7 +17176,7 @@ function Folio() {
       __self: _this,
       __source: {
         fileName: _jsxFileName,
-        lineNumber: 85,
+        lineNumber: 138,
         columnNumber: 23
       }
     }), contact.icon === 'file-pdf' && __jsx("div", {
@@ -16910,7 +17184,7 @@ function Folio() {
       __self: _this,
       __source: {
         fileName: _jsxFileName,
-        lineNumber: 87,
+        lineNumber: 140,
         columnNumber: 25
       }
     }, "Resume")));
@@ -16919,7 +17193,7 @@ function Folio() {
     __self: this,
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 93,
+      lineNumber: 146,
       columnNumber: 15
     }
   }, __jsx(_components_Carousel__WEBPACK_IMPORTED_MODULE_2__["default"], {
@@ -16927,10 +17201,11 @@ function Folio() {
     activeImageIndex: activeImageIndex,
     setActiveImageIndex: setActiveImageIndex,
     setGalleryOpen: setGalleryOpen,
+    segment: segment,
     __self: this,
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 94,
+      lineNumber: 147,
       columnNumber: 17
     }
   })), __jsx("div", {
@@ -16938,7 +17213,7 @@ function Folio() {
     __self: this,
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 101,
+      lineNumber: 155,
       columnNumber: 15
     }
   }, __jsx("img", {
@@ -16946,14 +17221,14 @@ function Folio() {
     __self: this,
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 104,
+      lineNumber: 158,
       columnNumber: 17
     }
   }), __jsx("div", {
     __self: this,
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 105,
+      lineNumber: 159,
       columnNumber: 17
     }
   }, _me_json__WEBPACK_IMPORTED_MODULE_6__.about.bio)))))), __jsx(_components_Gallery__WEBPACK_IMPORTED_MODULE_3__["default"], {
@@ -16962,14 +17237,16 @@ function Folio() {
     setActiveImageIndex: setActiveImageIndex,
     galleryOpen: galleryOpen,
     setGalleryOpen: setGalleryOpen,
+    segment: segment,
     __self: this,
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 111,
+      lineNumber: 165,
       columnNumber: 7
     }
   }));
 }
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../node_modules/process/browser.js */ "./node_modules/process/browser.js")))
 
 /***/ }),
 
