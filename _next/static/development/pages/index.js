@@ -17002,22 +17002,25 @@ function Folio() {
       columnNumber: 9
     }
   }, _me_json__WEBPACK_IMPORTED_MODULE_6__.name)), __jsx("div", {
-    id: "app",
+    className: "overlay ".concat(mobileMenuOpen ? 'show' : ''),
+    onClick: function onClick() {
+      return setMobileMenuOpen(false);
+    },
     __self: this,
     __source: {
       fileName: _jsxFileName,
       lineNumber: 76,
       columnNumber: 7
     }
-  }, __jsx("div", {
-    className: "overlay",
+  }), __jsx("div", {
+    id: "app",
     __self: this,
     __source: {
       fileName: _jsxFileName,
       lineNumber: 77,
-      columnNumber: 9
+      columnNumber: 7
     }
-  }), __jsx("div", {
+  }, __jsx("div", {
     className: "navigation ".concat(mobileMenuOpen ? 'open' : ''),
     __self: this,
     __source: {
